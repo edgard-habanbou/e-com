@@ -16,6 +16,7 @@ class ProductController extends Controller
 
     public function get_products()
     {
+        // Get All products
         return response()->json([
             "status" => "success",
             "data" => Product::all()
@@ -24,6 +25,7 @@ class ProductController extends Controller
     public function add_product(Request $request)
     {
         $user_role = auth()->user()->user_role;
+        // If user is a seller
         if ($user_role == 1) {
             $user_id = ["user_id" => auth()->user()->id];
             $request->merge($user_id);
@@ -38,6 +40,7 @@ class ProductController extends Controller
     public function update_product(Request $request, $id)
     {
         $user_role = auth()->user()->user_role;
+        // If user is a seller
         if ($user_role == 1) {
             $product = Product::find($id);
             if (!$product) {
@@ -56,6 +59,7 @@ class ProductController extends Controller
     public function delete_product(Request $request, $id)
     {
         $user_role = auth()->user()->user_role;
+        // If user is a seller
         if ($user_role == 1) {
             $product = Product::find($id);
             if (!$product) {
@@ -68,23 +72,6 @@ class ProductController extends Controller
             return response()->json([
                 "status" => "success",
                 "message" => "Product deleted"
-            ]);
-        }
-    }
-    public function get_product_by_id(Request $request, $id)
-    {
-        $user_role = auth()->user()->user_role;
-        if ($user_role == 1) {
-            $product = Product::find($id);
-            if (!$product) {
-                return response()->json([
-                    "status" => "error",
-                    "message" => "Product not found"
-                ]);
-            }
-            return response()->json([
-                "status" => "success",
-                "data" => $product
             ]);
         }
     }

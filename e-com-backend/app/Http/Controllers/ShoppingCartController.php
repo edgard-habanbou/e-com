@@ -19,9 +19,11 @@ class ShoppingCartController extends Controller
         $user_role = auth()->user()->user_role;
         if ($user_role == 2) {
             $user_id = auth()->user()->id;
+            // get product ids
             $shoppingcartProducts = ShoppingCartProducts::where('user_id', $user_id)->get('product_id');
             $Products = [];
             foreach ($shoppingcartProducts as $product) {
+                // get product names
                 $Products[] = Product::find($product->product_id)->product_name;
             }
             return response()->json([
@@ -38,10 +40,11 @@ class ShoppingCartController extends Controller
             $request->merge($user_id);
 
             $products = $request->products;
+            // Make a new Cart
             $shopping_cart = ShoppingCart::create($request->all());
 
             $shopping_cart_product = [];
-
+            // loop through the added products and add them to ShoppingCartProducts
             foreach ($products as $product) {
                 if (isset($product["product_id"]) && isset($product["quantity"])) {
                     $shopping_cart_product[] = ShoppingCartProducts::create([
@@ -68,10 +71,10 @@ class ShoppingCartController extends Controller
         $user_role = auth()->user()->user_role;
         if ($user_role == 2) {
             $user_id = auth()->user()->id;
-            $shopping_cart = ShoppingCart::where('user_id', $user_id)->first();
-            $shopping_cart_products = ShoppingCartProducts::where('shopping_cart_id', $shopping_cart->id)->get();
+            $shopping_cart = ShoppingCart::where('user_id', $user_id)->first(); //get user shopping cart
+            $shopping_cart_products = ShoppingCartProducts::where('shopping_cart_id', $shopping_cart->id)->get(); //get products that are for this cart
             foreach ($shopping_cart_products as $shopping_cart_product) {
-                $shopping_cart_product->delete();
+                $shopping_cart_product->delete(); // deleting each product
             }
             $shopping_cart->delete();
             return response()->json([

@@ -12,19 +12,22 @@ class TransactionController extends Controller
     {
         $this->middleware('auth:api');
     }
-    public function index()
+    public function get_all_transactions()
     {
+        // Get the only transactions related to the logged in user
         $user_role = auth()->user()->user_role;
         if ($user_role == 1) {
 
-            $transactions = Transaction::whereHas('product', function ($query) {
-                $user_id = auth()->user()->user_id;
-                $query->where('user_id', $user_id);
-            })->get();
+            $user_id = auth()->user()->id;
+
+            $transactions = Transaction::join('products', 'transactions.product_id', '=', 'products.id')
+                ->where('products.user_id', $user_id)
+                ->select('transactions.*')
+                ->get();
             return response()->json([
-                "status" => "success",
-                "data" => $transactions
-            ]);
+                'success' => true,
+                'data' => $transactions
+            ], 200);
         }
     }
 }

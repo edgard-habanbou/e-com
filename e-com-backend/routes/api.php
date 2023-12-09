@@ -1,12 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShoppingCartController;
-use App\Http\Controllers\TodoController;
-use App\Models\ShoppingCart;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
@@ -15,13 +12,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
 });
 
-Route::controller(TodoController::class)->group(function () {
-    Route::get('todos', 'index');
-    Route::post('todo', 'store');
-    Route::get('todo/{id}', 'show');
-    Route::put('todo/{id}', 'update');
-    Route::delete('todo/{id}', 'destroy');
-});
+
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'get_products');
