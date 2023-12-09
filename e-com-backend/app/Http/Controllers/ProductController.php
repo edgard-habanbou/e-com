@@ -46,8 +46,7 @@ class ProductController extends Controller
                     "message" => "Product not found"
                 ]);
             }
-            $product->fill($request->all());
-            $product->save();
+            $product->update($request->all());
             return response()->json([
                 "status" => "success",
                 "data" => $product
@@ -69,6 +68,23 @@ class ProductController extends Controller
             return response()->json([
                 "status" => "success",
                 "message" => "Product deleted"
+            ]);
+        }
+    }
+    public function get_product_by_id(Request $request, $id)
+    {
+        $user_role = auth()->user()->user_role;
+        if ($user_role == 1) {
+            $product = Product::find($id);
+            if (!$product) {
+                return response()->json([
+                    "status" => "error",
+                    "message" => "Product not found"
+                ]);
+            }
+            return response()->json([
+                "status" => "success",
+                "data" => $product
             ]);
         }
     }
